@@ -47,10 +47,18 @@ function Get-Factorial {
 if ($MyInvocation.InvocationName -ne '.') {
     switch ($Operation) {
         'fibonacci' {
+            if ($N -gt 92) {
+                throw 'N must be between 0 and 92 for fibonacci.'
+            }
+
             $value = Get-Fibonacci -N $N
             Write-Output "Fibonacci($N) = $value"
         }
         'factorial' {
+            if ($N -gt 20) {
+                throw 'N must be between 0 and 20 for factorial.'
+            }
+
             $value = Get-Factorial -N $N
             Write-Output "Factorial($N) = $value"
         }

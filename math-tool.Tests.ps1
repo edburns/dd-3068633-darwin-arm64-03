@@ -119,4 +119,24 @@ Describe 'math-tool CLI' {
         $output | Should -HaveCount 1
         $output[0] | Should -Be 'Factorial(5) = 120'
     }
+
+    It 'rejects fibonacci inputs outside the operation range' {
+        $stderrPath = Join-Path $TestDrive 'fibonacci-range.err'
+        $output = @(& $pwsh -NoLogo -NoProfile -File $scriptPath -Operation fibonacci -N 93 2> $stderrPath)
+        $errorOutput = Get-Content -LiteralPath $stderrPath -Raw
+
+        $LASTEXITCODE | Should -Not -Be 0
+        $output | Should -HaveCount 0
+        $errorOutput | Should -Match 'N must be between 0 and 92 for fibonacci\.'
+    }
+
+    It 'rejects factorial inputs outside the operation range' {
+        $stderrPath = Join-Path $TestDrive 'factorial-range.err'
+        $output = @(& $pwsh -NoLogo -NoProfile -File $scriptPath -Operation factorial -N 21 2> $stderrPath)
+        $errorOutput = Get-Content -LiteralPath $stderrPath -Raw
+
+        $LASTEXITCODE | Should -Not -Be 0
+        $output | Should -HaveCount 0
+        $errorOutput | Should -Match 'N must be between 0 and 20 for factorial\.'
+    }
 }
