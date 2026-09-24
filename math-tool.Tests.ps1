@@ -22,6 +22,17 @@ Describe 'Get-Fibonacci' {
     It 'returns five for N=5' {
         Get-Fibonacci -N 5 | Should -Be 5
     }
+
+    It 'returns the largest Fibonacci value that fits in Int64' {
+        $result = Get-Fibonacci -N 92
+
+        $result | Should -BeOfType 'System.Int64'
+        $result | Should -Be 7540113804746346429
+    }
+
+    It 'rejects values whose Fibonacci result exceeds Int64' {
+        { Get-Fibonacci -N 93 } | Should -Throw
+    }
 }
 
 Describe 'math-tool CLI' {

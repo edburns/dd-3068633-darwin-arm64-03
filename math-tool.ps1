@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateRange(0, [long]::MaxValue)]
+    [ValidateRange(0, 92)]
     [long]$N = 0
 )
 
@@ -9,7 +9,7 @@ Set-StrictMode -Version Latest
 function Get-Fibonacci {
     [CmdletBinding()]
     param(
-        [ValidateRange(0, [long]::MaxValue)]
+        [ValidateRange(0, 92)]
         [long]$N
     )
 
