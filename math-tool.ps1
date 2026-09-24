@@ -1,5 +1,6 @@
 [CmdletBinding()]
 param(
+    [ValidateSet('fibonacci', 'factorial')]
     [string]$Operation = 'fibonacci',
 
     [long]$N = 0
@@ -75,9 +76,6 @@ if ($MyInvocation.InvocationName -ne '.') {
             'factorial' {
                 $value = Get-Factorial -N $N
                 Write-Output "Factorial($N) = $value"
-            }
-            default {
-                throw "Unsupported operation '$Operation'."
             }
         }
     } catch {
