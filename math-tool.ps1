@@ -3,7 +3,7 @@ param(
     [ValidateSet('fibonacci', 'factorial')]
     [string]$Operation = 'fibonacci',
 
-    [ValidateRange(0, 92)]
+    [ValidateRange('NonNegative')]
     [long]$N = 0
 )
 
@@ -31,7 +31,7 @@ function Get-Fibonacci {
 function Get-Factorial {
     [CmdletBinding()]
     param(
-        [ValidateRange(0, [long]::MaxValue)]
+        [ValidateRange('NonNegative')]
         [long]$N
     )
 
