@@ -65,7 +65,11 @@ Describe 'Get-Factorial' {
     }
 
     It 'rejects values whose factorial result exceeds Int64' {
-        { Get-Factorial -N 21 } | Should -Throw
+        { Get-Factorial -N 21 } | Should -Throw -ExpectedMessage 'N must be between 0 and 20 for factorial.'
+    }
+
+    It 'rejects negative inputs' {
+        { Get-Factorial -N -1 } | Should -Throw -ExpectedMessage 'N must be between 0 and 20 for factorial.'
     }
 }
 

@@ -11,6 +11,7 @@ Set-StrictMode -Version Latest
 function Assert-MathToolInput {
     [CmdletBinding()]
     param(
+        [Parameter(Mandatory)]
         [ValidateSet('fibonacci', 'factorial')]
         [string]$Operation,
 
@@ -67,14 +68,19 @@ function Get-Factorial {
 }
 
 if ($MyInvocation.InvocationName -ne '.') {
-    switch ($Operation) {
-        'fibonacci' {
-            $value = Get-Fibonacci -N $N
-            Write-Output "Fibonacci($N) = $value"
+    try {
+        switch ($Operation) {
+            'fibonacci' {
+                $value = Get-Fibonacci -N $N
+                Write-Output "Fibonacci($N) = $value"
+            }
+            'factorial' {
+                $value = Get-Factorial -N $N
+                Write-Output "Factorial($N) = $value"
+            }
         }
-        'factorial' {
-            $value = Get-Factorial -N $N
-            Write-Output "Factorial($N) = $value"
-        }
+    } catch {
+        Write-Error -ErrorRecord $_
+        exit 1
     }
 }
