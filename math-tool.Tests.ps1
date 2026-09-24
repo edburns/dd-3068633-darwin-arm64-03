@@ -1,10 +1,9 @@
 [CmdletBinding()]
 param()
 
-$scriptPath = Join-Path $PSScriptRoot 'math-tool.ps1'
-
 Describe 'Get-Fibonacci' {
     BeforeAll {
+        $scriptPath = Join-Path $PSScriptRoot 'math-tool.ps1'
         . $scriptPath
     }
 
@@ -27,7 +26,8 @@ Describe 'Get-Fibonacci' {
 
 Describe 'math-tool CLI' {
     BeforeAll {
-        $pwsh = (Get-Command pwsh -CommandType Application).Source
+        $scriptPath = Join-Path $PSScriptRoot 'math-tool.ps1'
+        $pwsh = (Get-Command pwsh -CommandType Application | Select-Object -First 1).Source
     }
 
     It 'writes exactly one result line for N=0' {
