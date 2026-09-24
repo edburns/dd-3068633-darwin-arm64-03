@@ -35,6 +35,44 @@ Describe 'Get-Fibonacci' {
     }
 }
 
+Describe 'Get-Factorial' {
+    BeforeAll {
+        $scriptPath = Join-Path $PSScriptRoot 'math-tool.ps1'
+        . $scriptPath
+    }
+
+    It 'returns only one for N=0' {
+        $result = @(Get-Factorial -N 0)
+
+        $result | Should -HaveCount 1
+        $result[0] | Should -BeOfType 'System.Int64'
+        $result[0] | Should -Be 1
+    }
+
+    It 'returns one for N=1' {
+        Get-Factorial -N 1 | Should -Be 1
+    }
+
+    It 'returns one hundred twenty for N=5' {
+        Get-Factorial -N 5 | Should -Be 120
+    }
+
+    It 'returns the largest factorial value that fits in Int64' {
+        $result = Get-Factorial -N 20
+
+        $result | Should -BeOfType 'System.Int64'
+        $result | Should -Be 2432902008176640000
+    }
+
+    It 'rejects values whose factorial result exceeds Int64' {
+        { Get-Factorial -N 21 } | Should -Throw -ExpectedMessage 'N must be between 0 and 20 for factorial.'
+    }
+
+    It 'rejects negative inputs' {
+        { Get-Factorial -N -1 } | Should -Throw -ExpectedMessage 'N must be between 0 and 20 for factorial.'
+    }
+}
+
 Describe 'math-tool CLI' {
     BeforeAll {
         $scriptPath = Join-Path $PSScriptRoot 'math-tool.ps1'
@@ -63,5 +101,57 @@ Describe 'math-tool CLI' {
         $LASTEXITCODE | Should -Be 0
         $output | Should -HaveCount 1
         $output[0] | Should -Be 'Fibonacci(5) = 5'
+    }
+
+    It 'dispatches explicitly to fibonacci' {
+        $output = @(& $pwsh -NoLogo -NoProfile -File $scriptPath -Operation fibonacci -N 5)
+
+        $LASTEXITCODE | Should -Be 0
+        $output | Should -HaveCount 1
+        $output[0] | Should -Be 'Fibonacci(5) = 5'
+    }
+
+    It 'dispatches to factorial for N=0' {
+        $output = @(& $pwsh -NoLogo -NoProfile -File $scriptPath -Operation factorial -N 0)
+
+        $LASTEXITCODE | Should -Be 0
+        $output | Should -HaveCount 1
+        $output[0] | Should -Be 'Factorial(0) = 1'
+    }
+
+    It 'dispatches to factorial for N=1' {
+        $output = @(& $pwsh -NoLogo -NoProfile -File $scriptPath -Operation factorial -N 1)
+
+        $LASTEXITCODE | Should -Be 0
+        $output | Should -HaveCount 1
+        $output[0] | Should -Be 'Factorial(1) = 1'
+    }
+
+    It 'dispatches to factorial for N=5' {
+        $output = @(& $pwsh -NoLogo -NoProfile -File $scriptPath -Operation factorial -N 5)
+
+        $LASTEXITCODE | Should -Be 0
+        $output | Should -HaveCount 1
+        $output[0] | Should -Be 'Factorial(5) = 120'
+    }
+
+    It 'rejects fibonacci inputs outside the operation range' {
+        $stderrPath = Join-Path $TestDrive 'fibonacci-range.err'
+        $output = @(& $pwsh -NoLogo -NoProfile -File $scriptPath -Operation fibonacci -N 93 2> $stderrPath)
+        $errorOutput = Get-Content -LiteralPath $stderrPath -Raw
+
+        $LASTEXITCODE | Should -Not -Be 0
+        $output | Should -HaveCount 0
+        $errorOutput | Should -Match 'N must be between 0 and 92 for fibonacci\.'
+    }
+
+    It 'rejects factorial inputs outside the operation range' {
+        $stderrPath = Join-Path $TestDrive 'factorial-range.err'
+        $output = @(& $pwsh -NoLogo -NoProfile -File $scriptPath -Operation factorial -N 21 2> $stderrPath)
+        $errorOutput = Get-Content -LiteralPath $stderrPath -Raw
+
+        $LASTEXITCODE | Should -Not -Be 0
+        $output | Should -HaveCount 0
+        $errorOutput | Should -Match 'N must be between 0 and 20 for factorial\.'
     }
 }
