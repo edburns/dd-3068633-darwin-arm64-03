@@ -9,10 +9,19 @@ param(
 
 Set-StrictMode -Version Latest
 
+$script:MaxFibonacciN = 92L
+$script:MaxFactorialN = 20L
+
 function Get-Fibonacci {
     [CmdletBinding()]
     param(
-        [ValidateRange(0, 92)]
+        [ValidateScript({
+            if ($_ -lt 0 -or $_ -gt $script:MaxFibonacciN) {
+                throw "N must be between 0 and $script:MaxFibonacciN for fibonacci."
+            }
+
+            return $true
+        })]
         [long]$N
     )
 
@@ -28,10 +37,23 @@ function Get-Fibonacci {
     return $previous
 }
 
+<#
+.SYNOPSIS
+Returns N factorial for Int64-safe inputs.
+
+.PARAMETER N
+A non-negative integer from 0 through 20.
+#>
 function Get-Factorial {
     [CmdletBinding()]
     param(
-        [ValidateRange(0, 20)]
+        [ValidateScript({
+            if ($_ -lt 0 -or $_ -gt $script:MaxFactorialN) {
+                throw "N must be between 0 and $script:MaxFactorialN for factorial."
+            }
+
+            return $true
+        })]
         [long]$N
     )
 
@@ -47,16 +69,16 @@ function Get-Factorial {
 if ($MyInvocation.InvocationName -ne '.') {
     switch ($Operation) {
         'fibonacci' {
-            if ($N -gt 92) {
-                throw 'N must be between 0 and 92 for fibonacci.'
+            if ($N -gt $script:MaxFibonacciN) {
+                throw "N must be between 0 and $script:MaxFibonacciN for fibonacci."
             }
 
             $value = Get-Fibonacci -N $N
             Write-Output "Fibonacci($N) = $value"
         }
         'factorial' {
-            if ($N -gt 20) {
-                throw 'N must be between 0 and 20 for factorial.'
+            if ($N -gt $script:MaxFactorialN) {
+                throw "N must be between 0 and $script:MaxFactorialN for factorial."
             }
 
             $value = Get-Factorial -N $N
