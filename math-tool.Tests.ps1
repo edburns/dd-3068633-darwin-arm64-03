@@ -45,7 +45,7 @@ Describe 'Get-Factorial' {
         $result = @(Get-Factorial -N 0)
 
         $result | Should -HaveCount 1
-        $result[0] | Should -BeOfType 'System.Numerics.BigInteger'
+        $result[0] | Should -BeOfType 'System.Int64'
         $result[0] | Should -Be 1
     }
 

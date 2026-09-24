@@ -31,11 +31,11 @@ function Get-Fibonacci {
 function Get-Factorial {
     [CmdletBinding()]
     param(
-        [ValidateRange('NonNegative')]
+        [ValidateRange(0, 20)]
         [long]$N
     )
 
-    $value = [System.Numerics.BigInteger]::One
+    $value = 1L
 
     for ($index = 2L; $index -le $N; $index++) {
         $value *= $index
