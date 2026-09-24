@@ -21,6 +21,7 @@ function Assert-MathToolInput {
     $maximum = switch ($Operation) {
         'fibonacci' { 92L }
         'factorial' { 20L }
+        default { throw "Unsupported operation '$Operation'." }
     }
 
     if ($N -lt 0 -or $N -gt $maximum) {
@@ -48,13 +49,6 @@ function Get-Fibonacci {
     return $previous
 }
 
-<#
-.SYNOPSIS
-Returns N factorial for Int64-safe inputs.
-
-.PARAMETER N
-A non-negative integer from 0 through 20.
-#>
 function Get-Factorial {
     [CmdletBinding()]
     param(

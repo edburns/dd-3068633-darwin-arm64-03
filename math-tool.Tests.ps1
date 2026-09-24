@@ -63,6 +63,10 @@ Describe 'Get-Factorial' {
         $result | Should -BeOfType 'System.Int64'
         $result | Should -Be 2432902008176640000
     }
+
+    It 'rejects values whose factorial result exceeds Int64' {
+        { Get-Factorial -N 21 } | Should -Throw
+    }
 }
 
 Describe 'math-tool CLI' {
