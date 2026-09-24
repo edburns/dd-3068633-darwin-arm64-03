@@ -3,7 +3,6 @@ param(
     [ValidateSet('fibonacci', 'factorial')]
     [string]$Operation = 'fibonacci',
 
-    [ValidateRange('NonNegative')]
     [long]$N = 0
 )
 
@@ -18,6 +17,7 @@ function Assert-MathToolInput {
         [long]$N
     )
 
+    # Maximum inputs whose operation results fit in Int64.
     $maximum = switch ($Operation) {
         'fibonacci' { 92L }
         'factorial' { 20L }
