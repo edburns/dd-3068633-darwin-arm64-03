@@ -9,21 +9,32 @@ param(
 
 Set-StrictMode -Version Latest
 
-$script:MaxFibonacciN = 92L
-$script:MaxFactorialN = 20L
+function Assert-MathToolInput {
+    [CmdletBinding()]
+    param(
+        [ValidateSet('fibonacci', 'factorial')]
+        [string]$Operation,
+
+        [long]$N
+    )
+
+    $maximum = switch ($Operation) {
+        'fibonacci' { 92L }
+        'factorial' { 20L }
+    }
+
+    if ($N -lt 0 -or $N -gt $maximum) {
+        throw "N must be between 0 and $maximum for $Operation."
+    }
+}
 
 function Get-Fibonacci {
     [CmdletBinding()]
     param(
-        [ValidateScript({
-            if ($_ -lt 0 -or $_ -gt $script:MaxFibonacciN) {
-                throw "N must be between 0 and $script:MaxFibonacciN for fibonacci."
-            }
-
-            return $true
-        })]
         [long]$N
     )
+
+    Assert-MathToolInput -Operation fibonacci -N $N
 
     $previous = 0L
     $current = 1L
@@ -47,15 +58,10 @@ A non-negative integer from 0 through 20.
 function Get-Factorial {
     [CmdletBinding()]
     param(
-        [ValidateScript({
-            if ($_ -lt 0 -or $_ -gt $script:MaxFactorialN) {
-                throw "N must be between 0 and $script:MaxFactorialN for factorial."
-            }
-
-            return $true
-        })]
         [long]$N
     )
+
+    Assert-MathToolInput -Operation factorial -N $N
 
     $value = 1L
 
@@ -69,18 +75,10 @@ function Get-Factorial {
 if ($MyInvocation.InvocationName -ne '.') {
     switch ($Operation) {
         'fibonacci' {
-            if ($N -gt $script:MaxFibonacciN) {
-                throw "N must be between 0 and $script:MaxFibonacciN for fibonacci."
-            }
-
             $value = Get-Fibonacci -N $N
             Write-Output "Fibonacci($N) = $value"
         }
         'factorial' {
-            if ($N -gt $script:MaxFactorialN) {
-                throw "N must be between 0 and $script:MaxFactorialN for factorial."
-            }
-
             $value = Get-Factorial -N $N
             Write-Output "Factorial($N) = $value"
         }

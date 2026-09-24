@@ -56,6 +56,13 @@ Describe 'Get-Factorial' {
     It 'returns one hundred twenty for N=5' {
         Get-Factorial -N 5 | Should -Be 120
     }
+
+    It 'returns the largest factorial value that fits in Int64' {
+        $result = Get-Factorial -N 20
+
+        $result | Should -BeOfType 'System.Int64'
+        $result | Should -Be 2432902008176640000
+    }
 }
 
 Describe 'math-tool CLI' {
