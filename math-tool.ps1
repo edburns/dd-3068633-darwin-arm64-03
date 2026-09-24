@@ -1,6 +1,5 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('fibonacci', 'factorial')]
     [string]$Operation = 'fibonacci',
 
     [long]$N = 0
@@ -12,7 +11,6 @@ function Assert-MathToolInput {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        [ValidateSet('fibonacci', 'factorial')]
         [string]$Operation,
 
         [long]$N
@@ -77,6 +75,9 @@ if ($MyInvocation.InvocationName -ne '.') {
             'factorial' {
                 $value = Get-Factorial -N $N
                 Write-Output "Factorial($N) = $value"
+            }
+            default {
+                throw "Unsupported operation '$Operation'."
             }
         }
     } catch {
